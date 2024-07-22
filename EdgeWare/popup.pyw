@@ -17,8 +17,8 @@ from PIL import Image, ImageTk, ImageFilter
 SYS_ARGS = sys.argv.copy()
 SYS_ARGS.pop(0)
 
-#Start Imported Code
-#Code from: https://code.activestate.com/recipes/460509-get-the-actual-and-usable-sizes-of-all-the-monitor/
+# Start Imported Code
+# Code from: https://code.activestate.com/recipes/460509-get-the-actual-and-usable-sizes-of-all-the-monitor/
 user = ctypes.windll.user32
 
 class RECT(ctypes.Structure): #rect class for containing monitor info
@@ -27,7 +27,7 @@ class RECT(ctypes.Structure): #rect class for containing monitor info
         ('top', ctypes.c_long),
         ('right', ctypes.c_long),
         ('bottom', ctypes.c_long)
-        ]
+    ]
     def dump(self):
         return map(int, (self.left, self.top, self.right, self.bottom))
 
@@ -37,7 +37,7 @@ class MONITORINFO(ctypes.Structure): #unneeded for this, but i don't want to rew
         ('rcMonitor', RECT),
         ('rcWork', RECT),
         ('dwFlags', ctypes.c_ulong)
-        ]
+    ]
 
 def get_monitors():
     retval = []
@@ -66,9 +66,9 @@ def monitor_areas(): #all that matters from this is list(mapObj[monitor index][1
         data.append(mi.rcWork.dump())
         retval.append(data)
     return retval
-#End Imported Code
+# End Imported Code
 
-#used to check passed tags for script mode
+# Used to check passed tags for script mode
 def checkTag(tag) -> bool:
     return [c.startswith(tag) for c in SYS_ARGS].count(True) >= 1
 
@@ -91,7 +91,7 @@ HAS_LIFESPAN = False
 LIFESPAN = 0
 WEB_PROB = 0
 MITOSIS_STRENGTH = 2
-SUBMISSION_TEXT = 'I Submit <3'
+SUBMISSION_TEXT = 'Im a LOSER'
 PANIC_KEY = ''
 PANIC_REQUIRES_VALIDATION = False
 HASHED_PATH = None
@@ -130,7 +130,7 @@ with open(PATH + '\\config.cfg', 'r') as cfg:
     DENIAL_CHANCE = int(settings['denialChance'])
     SUBLIMINAL_MODE = check_setting('popupSubliminals')
 
-#functions for script mode, unused for now
+# Functions for script mode, unused for now
 if checkTag('timeout='):
     HAS_LIFESPAN = True
     LIFESPAN = int(SYS_ARGS[[c.startswith('timeout=') for c in SYS_ARGS].index(True)].split('=')[1])
@@ -144,16 +144,16 @@ if checkTag('hideCap'):
 
 if checkTag('showCap'):
     SHOW_CAPTIONS = True
-#end script mode function tag checks
+# End script mode function tag checks
 
-#used for timer mode, checks if password is required to panic
+# Used for timer mode, checks if password is required to panic
 if PANIC_REQUIRES_VALIDATION:
     hash_file_path = os.path.join(PATH, 'pass.hash')
     try:
         with open(hash_file_path, 'r') as file:
             HASHED_PATH = file.readline()
     except:
-        #no hash found
+        # No hash found
         HASHED_PATH = None
 
 if WEB_OPEN:
@@ -172,7 +172,7 @@ try:
 except:
     print('no CAPTIONS.json')
 
-#gif label class
+# Gif label class
 class GifLabel(tk.Label):
     def load(self, path:str, resized_width:int, resized_height:int, delay:int=75, back_image:Image.Image=None):
         self.image = Image.open(path)
@@ -197,7 +197,7 @@ class GifLabel(tk.Label):
             self.config(image=next(self.frames_))
             self.after(self.delay, self.next_frame)
 
-#video label class
+# Video label class
 class VideoLabel(tk.Label):
     def load(self, path:str, resized_width:int, resized_height:int):
         import imageio
@@ -239,15 +239,18 @@ class VideoLabel(tk.Label):
                 self.time_offset_end = time.perf_counter()
                 time.sleep(max(0, self.delay - (self.time_offset_end - self.time_offset_start)))
 
-
 def run():
-    #var things
-    arr = os.listdir(f'{os.path.abspath(os.getcwd())}\\resource\\img\\')
+    # var things
+    img_path = os.path.join(PATH, 'resource', 'img')
+    arr = []
+    for root, _, files in os.walk(img_path):
+        for img in files:
+            if not img.split('.')[-1].lower() == 'ini':
+                arr.append(os.path.join(root, img))
+    
     item = arr[rand.randrange(len(arr))]
     video_mode = False
 
-    while item.split('.')[-1].lower() == 'ini':
-        item = arr[rand.randrange(len(arr))]
     if len(SYS_ARGS) >= 1 and SYS_ARGS[0] != '%RAND%': 
         item = rand.choice(os.listdir(os.path.join(PATH, 'resource', 'vid')))
     if len(SYS_ARGS) >= 1 and SYS_ARGS[0] == '-video':
@@ -256,7 +259,7 @@ def run():
     if not video_mode:
         while True:
             try:
-                image = Image.open(os.path.abspath(f'{os.getcwd()}\\resource\\img\\{item}'))
+                image = Image.open(item)
                 break
             except:
                 item = arr[rand.randrange(len(arr))]
@@ -274,7 +277,7 @@ def run():
     screen_width = data_list[2] - data_list[0]
     screen_height = data_list[3] - data_list[1]
 
-    #window start
+    # Window start
     root = Tk()
     root.bind('<KeyPress>', lambda key: panic(key))
     root.configure(bg='black')
@@ -282,12 +285,12 @@ def run():
     root.frame = Frame(root)
     root.wm_attributes('-topmost', 1)
 
-    #many thanks to @MercyNudes for fixing my old braindead scaling method (https://twitter.com/MercyNudes)
-    def resize(img:Image.Image) -> Image.Image:
+    # Many thanks to @MercyNudes for fixing my old braindead scaling method (https://twitter.com/MercyNudes)
+    def resize(img: Image.Image) -> Image.Image:
         size_source = max(img.width, img.height) / min(screen_width, screen_height)
         size_target = rand.randint(30, 70) / 100 if not LOWKEY_MODE else rand.randint(20, 50) / 100
         resize_factor = size_target / size_source
-        return image.resize((int(image.width * resize_factor), int(image.height * resize_factor)), Image.ANTIALIAS)
+        return img.resize((int(img.width * resize_factor), int(img.height * resize_factor)), Image.LANCZOS)
 
     resized_image = resize(image)
 
@@ -302,20 +305,20 @@ def run():
     photoimage_image = ImageTk.PhotoImage(resized_image)
     image.close()
 
-    #different handling for videos vs gifs vs normal images
+    # Different handling for videos vs gifs vs normal images
     if video_mode:
-        #video mode
+        # Video mode
         label = VideoLabel(root)
         label.load(path = video_path, resized_width = resized_image.width, resized_height = resized_image.height)
         label.pack()
         thread.Thread(target=lambda: label.play(), daemon=True).start()
     elif gif_bool:
-        #gif mode
+        # Gif mode
         label = GifLabel(root)
-        label.load(path=os.path.abspath(f'{os.getcwd()}\\resource\\img\\{item}'), resized_width = resized_image.width, resized_height = resized_image.height)
+        label.load(path=item, resized_width = resized_image.width, resized_height = resized_image.height)
         label.pack()
     else:
-        #standard image mode
+        # Standard image mode
         if not SUBLIMINAL_MODE:
             label = Label(root, image=photoimage_image, bg='black')
             label.pack()

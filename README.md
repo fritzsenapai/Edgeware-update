@@ -1,6 +1,13 @@
 Fork of Edgeware to add linux-compatability and more.
 https://github.com/Sassy0P/Edgeware/tree/linux-compability
 
+22July2024 Update
+
+- update "ANTIALIAS" to "LANCZOS now you can run most up to date pillow
+- search "img" direcory recursively so you can organze folders into subdirectories
+- change the annoynce slider from 50 to 500 on the hibernate feature.
+
+
 # Edgeware
 **First and foremost as a disclaimer: this is NOT actually malicious software. It is intended for entertainment purposes only. Any and all damage caused to your files or computer is _YOUR_ responsibility. If you're worried about losing things, BACK THEM UP.**
 

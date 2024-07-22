@@ -79,23 +79,23 @@ def load_settings():
             logging.info('wrote updated config to config.cfg')
 
     #handling proper initialization of wallpapers
-    default_wallpaper_dict = {'default': 'wallpaper.png'}
-    logging.info('converting wallpaper string to dict')
-    try:
-        if settings['wallpaperDat'] == 'WPAPER_DEF':
-            logging.info('default wallpaper data used')
-            settings['wallpaperDat'] = default_wallpaper_dict
-        else:
-            print(settings['wallpaperDat'])
-            if type(settings['wallpaperDat']) == dict:
-                logging.info('wallpaperdat already dict')
-                print('passed')
-            else:
-                settings['wallpaperDat'] = ast.literal_eval(settings['wallpaperDat'].replace('\\', '/'))
-                logging.info('parsed wallpaper dict from string')
-    except Exception as e:
-        settings['wallpaperDat'] = default_wallpaper_dict
-        logging.warning(f'failed to parse wallpaper from string, using default value instead\n\tReason: {e}')
+    # default_wallpaper_dict = {'default': 'wallpaper.png'}
+    # logging.info('converting wallpaper string to dict')
+    # try:
+    #     if settings['wallpaperDat'] == 'WPAPER_DEF':
+    #         logging.info('default wallpaper data used')
+    #         settings['wallpaperDat'] = default_wallpaper_dict
+    #     else:
+    #         print(settings['wallpaperDat'])
+    #         if type(settings['wallpaperDat']) == dict:
+    #             logging.info('wallpaperdat already dict')
+    #             print('passed')
+    #         else:
+    #             settings['wallpaperDat'] = ast.literal_eval(settings['wallpaperDat'].replace('\\', '/'))
+    #             logging.info('parsed wallpaper dict from string')
+    # except Exception as e:
+    #     settings['wallpaperDat'] = default_wallpaper_dict
+    #     logging.warning(f'failed to parse wallpaper from string, using default value instead\n\tReason: {e}')
 
 #load settings, if first run open options, then reload options from file
 load_settings()
@@ -239,7 +239,7 @@ FILL_DELAY = int(settings['fill_delay'])
 REPLACE_MODE = int(settings['replace']) == 1
 REPLACE_THRESHOLD = int(settings['replaceThresh'])
 
-ROTATE_WALLPAPER = int(settings['rotateWallpaper']) == 1
+# ROTATE_WALLPAPER = int(settings['rotateWallpaper']) == 1
 
 MITOSIS_MODE = int(settings['mitosisMode']) == 1
 LOWKEY_MODE = int(settings['lkToggle']) == 1
@@ -310,7 +310,7 @@ try:
                 os.mkdir(PATH + obj)
             default_path = PATH + '\\default_assets\\'
             output_path = PATH + '\\resource\\'
-            shutil.copyfile(f'{default_path}default_wallpaper.png', f'{output_path}wallpaper.png')
+            # shutil.copyfile(f'{default_path}default_wallpaper.png', f'{output_path}wallpaper.png')
             shutil.copyfile(f'{default_path}default_image.png', f'{output_path}img\\img0.png', follow_symlinks=True)
             if not os.path.exists(f'{output_path}discord.dat'):
                 with open(f'{output_path}discord.dat', 'w') as f:
@@ -396,9 +396,9 @@ if LOADING_FLAIR:
     subprocess.call('pythonw startup_flair.pyw')
 
 #set wallpaper
-if not HIBERNATE_MODE:
-    logging.info('set user wallpaper to default wallpaper.png')
-    ctypes.windll.user32.SystemParametersInfoW(20, 0, PATH + '\\resource\\wallpaper.png', 0)
+# if not HIBERNATE_MODE:
+#     logging.info('set user wallpaper to default wallpaper.png')
+#     ctypes.windll.user32.SystemParametersInfoW(20, 0, PATH + '\\resource\\wallpaper.png', 0)
 
 #selects url to be opened in new tab by web browser
 def url_select(arg:int):
@@ -501,9 +501,9 @@ def main():
         thread.Thread(target=download_web_resources).start()
 
     #start thread for wallpaper timer
-    if ROTATE_WALLPAPER:
-        logging.info('start rotate_wallpapers thread')
-        thread.Thread(target=rotate_wallpapers).start()
+    # if ROTATE_WALLPAPER:
+    #     logging.info('start rotate_wallpapers thread')
+    #     thread.Thread(target=rotate_wallpapers).start()
 
     #run annoyance thread or do hibernate mode
     if HIBERNATE_MODE:
@@ -511,7 +511,7 @@ def main():
         while True:
             waitTime = rand.randint(HIBERNATE_MIN, HIBERNATE_MAX)
             time.sleep(float(waitTime))
-            ctypes.windll.user32.SystemParametersInfoW(20, 0, PATH + '\\resource\\wallpaper.png', 0)
+            # ctypes.windll.user32.SystemParametersInfoW(20, 0, PATH + '\\resource\\wallpaper.png', 0)
             for i in range(0, rand.randint(int(WAKEUP_ACTIVITY / 2), WAKEUP_ACTIVITY)):
                 roll_for_initiative()
     else:
@@ -703,17 +703,17 @@ def roll_for_initiative():
             messagebox.showerror('Prompt Error', 'Could not start prompt.\n[' + str(e) + ']')
             logging.critical(f'failed to start prompt.pyw\n\tReason: {e}')
 
-def rotate_wallpapers():
-    prv = 'default'
-    base = int(settings['wallpaperTimer'])
-    vari = int(settings['wallpaperVariance'])
-    while len(settings['wallpaperDat'].keys()) > 1:
-        time.sleep(base + rand.randint(-vari, vari))
-        selectedWallpaper = list(settings['wallpaperDat'].keys())[rand.randrange(0, len(settings['wallpaperDat'].keys()))]
-        while(selectedWallpaper == prv):
-            selectedWallpaper = list(settings['wallpaperDat'].keys())[rand.randrange(0, len(settings['wallpaperDat'].keys()))]
-        ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.join(PATH, 'resource', settings['wallpaperDat'][selectedWallpaper]), 0)
-        prv = selectedWallpaper
+# def rotate_wallpapers():
+#     prv = 'default'
+#     base = int(settings['wallpaperTimer'])
+#     vari = int(settings['wallpaperVariance'])
+#     while len(settings['wallpaperDat'].keys()) > 1:
+#         time.sleep(base + rand.randint(-vari, vari))
+#         selectedWallpaper = list(settings['wallpaperDat'].keys())[rand.randrange(0, len(settings['wallpaperDat'].keys()))]
+#         while(selectedWallpaper == prv):
+#             selectedWallpaper = list(settings['wallpaperDat'].keys())[rand.randrange(0, len(settings['wallpaperDat'].keys()))]
+#         ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.join(PATH, 'resource', settings['wallpaperDat'][selectedWallpaper]), 0)
+#         prv = selectedWallpaper
 
 def do_timer():
     hashObjPath = os.path.join(PATH, 'pass.hash')
@@ -766,10 +766,13 @@ def fill_drive():
     images = []
     imageNames = []
     logging.info(f'starting drive fill to {docPath}')
-    for img in os.listdir(PATH + '\\resource\\img\\'):
-        if not img.split('.')[-1] == 'ini':
-            images.append(open(os.path.join(PATH, 'resource\\img', img), 'rb').read())
-            imageNames.append(img)
+    img_path = os.path.join(PATH, 'resource', 'img')
+    for root, _, files in os.walk(img_path):
+        for img in files:
+            if not img.split('.')[-1] == 'ini':
+                image_path = os.path.join(root, img)
+                images.append(open(image_path, 'rb').read())
+                imageNames.append(image_path)
     for root, dirs, files in os.walk(docPath):
         #tossing out directories that should be avoided
         for obj in list(dirs):
@@ -789,9 +792,12 @@ def replace_images():
     REPLACING_LIVE = True
     docPath = DRIVE_PATH.replace('/', '\\') + '\\'#os.path.expanduser('~\\')
     imageNames = []
-    for img in os.listdir(PATH + '\\resource\\img\\'):
-        if not img.split('.')[-1] == 'ini':
-            imageNames.append(PATH + '\\resource\\img\\' + img)
+    img_path = os.path.join(PATH, 'resource', 'img')
+    for root, _, files in os.walk(img_path):
+        for img in files:
+            if not img.split('.')[-1] == 'ini':
+                imageNames.append(os.path.join(root, img))
+
     for root, dirs, files in os.walk(docPath):
         for obj in list(dirs):
             if obj in AVOID_LIST or obj[0] == '.':

@@ -17,6 +17,6 @@ if os.path.exists(os.path.join(PATH, 'hid_time.dat')):
     os.kill(os.getpid(), 9)
 else:
     #continue if no timer
-    ctypes.windll.user32.SystemParametersInfoW(20, 0, PATH + '\\default_assets\\default_win10.jpg', 0)
+    ctypes.windll.user32.SystemParametersInfoW()
 
 os.startfile('panic.bat')
